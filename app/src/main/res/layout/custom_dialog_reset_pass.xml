@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset Password"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:id="@+id/title"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your email"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="10dp"
+        android:textSize="16dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/message"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/edt_content"
+        android:backgroundTint="@color/colorPrimary"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEND EMAIL"
+        android:layout_below="@+id/edt_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/tv_send_email"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_content"
+        android:layout_toLeftOf="@+id/tv_send_email"
+        android:text="CANCEL"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/tv_cancel"
+        />
+
+</RelativeLayout>

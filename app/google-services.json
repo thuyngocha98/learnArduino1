@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "777827127234",
+    "firebase_url": "https://learnarduino-5e805.firebaseio.com",
+    "project_id": "learnarduino-5e805",
+    "storage_bucket": "learnarduino-5e805.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777827127234:android:f049186f2ed818ed",
+        "android_client_info": {
+          "package_name": "com.hatn.learnarduino"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777827127234-3ms2cckejkdmmuv2en7ebtqs6hr2pcno.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hatn.learnarduino",
+            "certificate_hash": "ee86e502d1dbbdda42938d7ee82b0aa09ead12ea"
+          }
+        },
+        {
+          "client_id": "777827127234-g15aq8o1urphpd11jnjcto1gfnkbuota.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADbhJgmW2Y5MGx3AVSkiJDOiiiuPy7CkI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777827127234-g15aq8o1urphpd11jnjcto1gfnkbuota.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
