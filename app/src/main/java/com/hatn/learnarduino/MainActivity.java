@@ -2,6 +2,7 @@ package com.hatn.learnarduino;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -20,6 +21,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,8 +33,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,21 +53,35 @@ public class MainActivity extends AppCompatActivity {
     public FirebaseAuth mAuth;
     public GoogleSignInClient mGoogleSignInClient;
     public SignInButton signInButton;
+    private FirebaseUser user;
     private TextView tvNewAcc, tvForgot;
     private EditText edtEmail, edtPass;
     private Button btnLogin;
+    private ProgressDialog loading, loandingFace;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+
+
+        user = mAuth.getCurrentUser();
+        if(user == null){
+            setContentView(R.layout.activity_main);
+            FacebookSdk.sdkInitialize(getApplicationContext());
+        }
+        else {
+            Intent intent = new Intent(MainActivity.this, LoggedActivity.class);
+            startActivity(intent);
+        }
+
 
         // anh xa
         widget();
 
+        // click button login basic
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,11 +196,12 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions("email","public_profile");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("HATN:", "facebook:onSuccess:" + loginResult);
+                Toast.makeText(MainActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -213,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
         edtPass = (EditText) findViewById(R.id.edt_pass);
         tvForgot = (TextView) findViewById(R.id.tv_forgot);
         tvNewAcc = (TextView) findViewById(R.id.tv_new_account);
+        loading = new ProgressDialog(this);
+        loandingFace = new ProgressDialog(this);
     }
 
     @Override
@@ -238,10 +260,11 @@ public class MainActivity extends AppCompatActivity {
     // ...
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
         // Pass the activity result back to the Facebook SDK
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
 
         //GOOGLE
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -259,9 +282,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //facebook
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("HATN:", "handleFacebookAccessToken:" + token);
+
+        loading.setTitle("Login With Facebook Account");
+        loading.setMessage("Please wait...");
+        loading.setCanceledOnTouchOutside(true);
+        loading.show();
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -279,14 +307,16 @@ public class MainActivity extends AppCompatActivity {
                             newPost.put("ex", 0);
                             current_user_id.setValue(newPost);
 
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI();
+                            loandingFace.dismiss();
+
+                           Intent intent = new Intent(MainActivity.this, LoggedActivity.class);
+                           startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("HATN:", "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI();
+                            //updateUI();
                         }
 
                         // ...
@@ -306,6 +336,11 @@ public class MainActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d("HATN:", "firebaseAuthWithGoogle:" + acct.getId());
 
+        loading.setTitle("Login With Google Account");
+        loading.setMessage("Please wait...");
+        loading.setCanceledOnTouchOutside(true);
+        loading.show();
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -322,15 +357,19 @@ public class MainActivity extends AppCompatActivity {
                             newPost.put("ex", 0);
                             current_user_id.setValue(newPost);
 
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI();
+                            loading.dismiss();
+
+                            Intent intent = new Intent(MainActivity.this, LoggedActivity.class);
+                            startActivity(intent);
+                            //FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI();
 
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("HATN:", "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
-                            updateUI();
+                            //updateUI();
                         }
 
                         // ...
@@ -342,7 +381,8 @@ public class MainActivity extends AppCompatActivity {
 
         // [START auth_sign_out]
 
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
+
 
         // [END auth_sign_out]
     }
