@@ -16,6 +16,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -74,6 +79,14 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
+                                String user_id = mAuth.getCurrentUser().getUid();
+                                DatabaseReference current_user_id = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+
+                                Map newPost = new HashMap();
+                                newPost.put("ex", 0);
+
+                                current_user_id.setValue(newPost);
+
                                 SendUserToLoginActivity();
                                 Toast.makeText(RegisterActivity.this, "Create account successfully...", Toast.LENGTH_SHORT).show();
                                 loading.dismiss();

@@ -36,6 +36,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -146,6 +151,13 @@ public class MainActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
 //                                        FirebaseUser user = mAuth.getCurrentUser();
 //                                        updateUI(user);
+                                        //set expensive user
+                                        String user_id = mAuth.getCurrentUser().getUid();
+                                        DatabaseReference current_user_id = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                                        Map newPost = new HashMap();
+                                        newPost.put("ex", 0);
+                                        current_user_id.setValue(newPost);
+
                                         Intent intent = new Intent(MainActivity.this, LoggedActivity.class);
                                         startActivity(intent);
                                     } else {
@@ -259,6 +271,14 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("HATN:", "signInWithCredential:success");
+
+                            //set ex for user
+                            String user_id = mAuth.getCurrentUser().getUid();
+                            DatabaseReference current_user_id = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                            Map newPost = new HashMap();
+                            newPost.put("ex", 0);
+                            current_user_id.setValue(newPost);
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI();
                         } else {
@@ -294,8 +314,18 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("HATN:", "signInWithCredential:success");
+
+                            //set ex for user
+                            String user_id = mAuth.getCurrentUser().getUid();
+                            DatabaseReference current_user_id = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                            Map newPost = new HashMap();
+                            newPost.put("ex", 0);
+                            current_user_id.setValue(newPost);
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI();
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("HATN:", "signInWithCredential:failure", task.getException());

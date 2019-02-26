@@ -47,7 +47,7 @@
         android:layout_toLeftOf="@+id/tv_send_email"
         android:text="CANCEL"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:layout_marginRight="20dp"
         android:textColor="@color/colorPrimary"
         android:id="@+id/tv_cancel"
